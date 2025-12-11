@@ -1,5 +1,8 @@
+using api;
 using api.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,8 @@ options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
 ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")
 ));});
 
+
+builder.Services.AddHostedService<BgServices>();
 
 // Configure CORS to allow requests from your frontend (http://localhost:5174)
 builder.Services.AddCors(options =>
@@ -32,12 +37,21 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Enable serving static files from the 'uploads' folder
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+    RequestPath = "/uploads"
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 app.MapControllers();

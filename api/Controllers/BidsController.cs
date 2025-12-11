@@ -89,16 +89,46 @@ namespace api.Controllers
                 };
                 return NotFound(errorResponse);
             }
-            
+
+            var payment = _context.Payments.FirstOrDefault(x => x.UserId == createBid.BidderId && x.AuctionId == createBid.AuctionId && x.Type == "StartingBid");        
+            if (payment == null) {
+                var makePaymentResponse = new {
+                    success = false,
+                    data = new {
+                        amount = auction.StartingBid * (decimal)0.1,
+                        type = "StartingBid",
+                        auctionId = auction.AuctionId,
+                        userId = bidder.UserId,
+                    },
+                    message = "Need to make a payment to start bidding"
+                };
+                return Ok(makePaymentResponse);
+            }
+
             
             var bidModel = new Bid {
                 AuctionId = createBid.AuctionId,
                 BidderId = createBid.BidderId,
                 Status = createBid.Status,
-                BidAmount = createBid.BidAmount
+                BidAmount = createBid.BidAmount,
+                BidderName = bidder.FirstName + " " + bidder.LastName
             };
             
             _context.Bids.Add(bidModel);
+            _context.SaveChanges();
+            
+            _context.Notifications.Add(new Notification {
+                UserId = bidModel.BidderId,
+                Message = $"You have successfully created a bid for {auction.Title}",
+                Title = "Bid Created",
+                Link = $"/auction/{auction.AuctionId}"
+            });
+            _context.Notifications.Add(new Notification {
+                UserId = auction.SellerId,
+                Message = $"You have a new bid for {auction.Title} from {bidder.FirstName} {bidder.LastName}",
+                Title = "New Bid",
+                Link = $"/auction/{auction.AuctionId}"
+            });
             _context.SaveChanges();
 
             return Ok(new

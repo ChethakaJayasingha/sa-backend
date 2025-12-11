@@ -12,8 +12,8 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(APIContext))]
-    [Migration("20240912193935_InitialMod")]
-    partial class InitialMod
+    [Migration("20241018072258_PayUp")]
+    partial class PayUp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,10 @@ namespace api.Migrations
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("IsLive")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int?>("SellerId")
                         .HasColumnType("int");
@@ -146,6 +150,11 @@ namespace api.Migrations
                     b.Property<int>("BidderId")
                         .HasColumnType("int");
 
+                    b.Property<string>("BidderName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -183,14 +192,13 @@ namespace api.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Message")
+                    b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("Message")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -199,6 +207,9 @@ namespace api.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -219,13 +230,13 @@ namespace api.Migrations
                     b.Property<int>("AuctionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BuyerId")
+                    b.Property<int>("BidId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsPaid")
+                    b.Property<bool>("IsOK")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("PaymentMethod")
@@ -238,16 +249,16 @@ namespace api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("SellerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TransactionId")
+                    b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("PaymentId");
 
