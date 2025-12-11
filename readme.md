@@ -6,7 +6,7 @@ This API provides endpoints for managing auctions, bids, payments, users, notifi
 
 ### ER Diagram
 
-![ER Diagram](/imgs/ERD.png)
+![ER Diagram](./imgs/ERD.png)
 
 This diagram provides a visual representation of the database structure, showing the relationships between different entities within the system.
 
@@ -71,7 +71,7 @@ Follow these steps to set up and run the project.
 #### 1. Clone the repository
 
 ```bash
-git clone https://github.com/upekshaip/sa-backend.git
+git clone https://github.com/ChethakaJayasingha/bidout-backend.git
 ```
 
 #### 2. Navigate to the project directory
